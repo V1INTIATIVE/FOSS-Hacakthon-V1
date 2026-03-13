@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<h1><b>Github Auth</b></h1>
+   <div id="status">Processing login...</div>
+
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const githubToken = urlParams.get('token');
+
+    if (githubToken) {
+        document.getElementById('status').textContent = 'Login successful! Your GitHub token is: ' + githubToken;
+    } else {
+        document.getElementById('status').textContent = 'No token found. Please log in through GitHub.';
+    }
+    
+
+
+
+
+</script>
+    
+</body>
+</html>
