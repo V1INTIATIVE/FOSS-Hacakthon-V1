@@ -26,4 +26,4 @@ dropDown_study.addEventListener('change', (event) => {
 
 
 
-alert("Test ");
+alert("Test check ");
