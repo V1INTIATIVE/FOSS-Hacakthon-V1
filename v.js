@@ -1,6 +1,6 @@
 const dropDown = document.getElementById('class');
-const dropDown_subject = document.getElementById('subject');
-const dropDown_study = document.getElementById('study');
+const dropDown_subject = document.getElementById('Subjects');
+const dropDown_study = document.getElementById('mode');
 
 
 
@@ -27,3 +27,7 @@ dropDown_study.addEventListener('change', (event) => {
 
 
 alert("Test check ");
+
+
+
+
