@@ -25,9 +25,19 @@ dropDown_study.addEventListener('change', (event) => {
 });
 
 
+const button = document.getElementById("learnButton");
 
-alert("Test check ");
+button.addEventListener("click", (e) => {
+    e.preventDefault(); // stop form auto submit
 
+    localStorage.setItem('class', choice);
+    localStorage.setItem('subject', choice_subject);
+    localStorage.setItem('study', choice_study);
+
+    console.log("Saved:", choice, choice_subject, choice_study);
+
+    window.location.href = "main.html";
+});
 
 
 
