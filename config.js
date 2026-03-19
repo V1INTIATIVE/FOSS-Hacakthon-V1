@@ -68,6 +68,14 @@ const Class10_Geography = [
   "Manufacturing Industries","Lifelines of National Economy"
 ];
 
+const Class10_Math = [
+  "Real Numbers","Polynomials","Pair of Linear Equations in Two Variables",
+  "Quadratic Equations","Arithmetic Progressions","Triangles",
+  "Coordinate Geometry","Introduction to Trigonometry","Some Applications of Trigonometry",
+  "Circles","Constructions","Areas Related to Circles",
+  "Surface Areas and Volumes","Statistics","Probability"
+];
+
 // Class 11
 const Class11_Physics = [
   "Physical World","Units and Measurements","Motion in a Straight Line",
@@ -180,6 +188,7 @@ const data = {
   },
   "10": {
     Science: Class10_Science,
+    Math: Class10_Math,
     English: Class10_English,
     History: Class10_History,
     Geography: Class10_Geography
@@ -202,45 +211,66 @@ const data = {
   }
 };
 
-const cls = localStorage.getItem("class");
-const subject = localStorage.getItem("subject");
-
-let chapters = data[cls]?.[subject] || [];
-
-
 document.addEventListener("DOMContentLoaded", () => {
-
   const chapterSelect = document.getElementById("chapter");
+  if (!chapterSelect) return;
 
+  // Load user choice from the previous page
+  const cls = localStorage.getItem("class");
+  const subject = localStorage.getItem("subject");
+
+  // Default placeholder option
   chapterSelect.innerHTML = "";
-if (!Array.isArray(chapters)) {
-  chapters = Object.values(chapters).flat();
-}
+  const defaultOption = document.createElement("option");
+  defaultOption.textContent = "Select a chapter";
+  defaultOption.disabled = true;
+  defaultOption.selected = true;
+  chapterSelect.appendChild(defaultOption);
 
-const chapterSelect = document.getElementById("chapter");
+  // If we don't have a valid selection, stop here.
+  if (!cls || !subject || !data[cls] || !data[cls][subject]) {
+    console.warn("Missing class/subject or no data available", { cls, subject });
+    return;
+  }
 
-// clear just in case
-chapterSelect.innerHTML = "";
+  let chapters = data[cls][subject];
+  if (!Array.isArray(chapters)) {
+    chapters = Object.values(chapters).flat();
+  }
 
-// add default option
-const defaultOption = document.createElement("option");
-defaultOption.textContent = "Select a chapter";
-defaultOption.disabled = true;
-defaultOption.selected = true;
-chapterSelect.appendChild(defaultOption);
+  chapters.forEach(ch => {
+    const option = document.createElement("option");
+    option.value = ch;
+    option.textContent = ch;
+    chapterSelect.appendChild(option);
+  });
 
-// add chapters
-chapters.forEach(ch => {
-  const option = document.createElement("option");
-  option.value = ch;
-  option.textContent = ch;
-  chapterSelect.appendChild(option);
+  // Add event listener to replace the container content when a chapter is selected
+  chapterSelect.addEventListener('change', () => {
+    if (chapterSelect.value && chapterSelect.value !== 'Select a chapter') {
+      const container = document.querySelector('.flex.justify-center.items-center.h-screen');
+      if (container) {
+        container.innerHTML = `
+          <div class="bg-white border border-gray-300 rounded-lg shadow p-6 w-80 text-center">
+            <h1 class="text-2xl font-bold text-gray-700 mb-4">Selected Chapter</h1>
+            <p class="text-lg text-gray-600">${chapterSelect.value}</p>
+            <p class="text-sm text-gray-500 mt-4">So What should we call you ?</p>
+            <input type="text" id="username" class="w-full border border-gray-300 rounded-md p-2 mt-2" placeholder="Enter your name">
+          </div>
+        `;
+      }
+    }
+  });
+
+  console.log("Class:", cls);
+  console.log("Subject:", subject);
+  console.log("Chapters:", chapters);
 });
 
-
-
-console.log("Class:", cls);
-console.log("Subject:", subject);
-console.log("Chapters:", chapters);
+chapterSelect.addEventListener("change", () => {
+  if (chapterSelect.value !== "Select a chapter") {
+    const container = document.querySelector(".flex.justify-center.items-center.h-screen");
+    container.computedStyleMap.display = "none";
+  }
 
 });
