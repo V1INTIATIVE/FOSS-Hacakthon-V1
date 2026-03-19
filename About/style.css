@@ -1,0 +1,10 @@
+body {
+  background: #01042d;
+  color: white;
+}
+#ABOUTIT {
+  font-size: 2vw;
+  margin-top: 10vh;
+  text-align: center;
+  font-family: sans-serif;
+}
