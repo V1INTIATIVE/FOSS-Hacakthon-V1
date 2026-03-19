@@ -1,4 +1,5 @@
-// Class 9
+
+
 const Class9_Science = [
   "Matter in Our Surroundings",
   "Is Matter Around Us Pure",
@@ -211,6 +212,10 @@ const data = {
   }
 };
 
+const Sarvam_ENDPOINT = "https://api.sarvam.ai/v1/chat/completions";
+const Sarvam_API_Key = "ENTER_API_KEY"; // Replace with your actual Sarvam AI API key
+
+
 document.addEventListener("DOMContentLoaded", () => {
   const chapterSelect = document.getElementById("chapter");
   if (!chapterSelect) return;
@@ -245,32 +250,105 @@ document.addEventListener("DOMContentLoaded", () => {
     chapterSelect.appendChild(option);
   });
 
-  // Add event listener to replace the container content when a chapter is selected
+  // Add event listener to show the name prompt and then replace the container after name is submitted
   chapterSelect.addEventListener('change', () => {
     if (chapterSelect.value && chapterSelect.value !== 'Select a chapter') {
       const container = document.querySelector('.flex.justify-center.items-center.h-screen');
-      if (container) {
+      if (!container) return;
+
+      container.innerHTML = `
+        <div class="bg-white border border-gray-300 rounded-lg shadow p-6 w-80 text-center">
+          <h1 class="text-2xl font-bold text-gray-700 mb-4">Selected Chapter</h1>
+          <p class="text-lg text-gray-600 mb-4">${chapterSelect.value}</p>
+          <p class="text-sm text-gray-500 mb-2">So what should we call you?</p>
+          <input type="text" id="username" class="w-full border border-gray-300 rounded-md p-2" placeholder="Enter your name" required>
+          <button id="nameSubmit" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-md">Continue</button>
+        </div>
+      `;
+
+      const nameInput = container.querySelector('#username');
+      const nameButton = container.querySelector('#nameSubmit');
+
+      const finish = () => {
+        const name = nameInput?.value?.trim();
+        if (!name) return;
+
+        localStorage.setItem('name', name);
+
+        const selectedChapter = chapterSelect.value;
+
         container.innerHTML = `
           <div class="bg-white border border-gray-300 rounded-lg shadow p-6 w-80 text-center">
-            <h1 class="text-2xl font-bold text-gray-700 mb-4">Selected Chapter</h1>
-            <p class="text-lg text-gray-600">${chapterSelect.value}</p>
-            <p class="text-sm text-gray-500 mt-4">So What should we call you ?</p>
-            <input type="text" id="username" class="w-full border border-gray-300 rounded-md p-2 mt-2" placeholder="Enter your name">
+            <h1 class="text-2xl font-bold text-gray-700 mb-4">Hello, ${name}!</h1>
+            <p class="text-lg text-gray-600">You're ready to learn: <strong>${selectedChapter}</strong></p>
+            <p class="text-sm text-gray-500 mt-4">Preparing your lesson...</p>
           </div>
         `;
-      }
+
+        // After 5 seconds, load the Sarvam AI lesson
+        setTimeout(async () => {
+          const lesson = await fetchSarvamAnswer(name, selectedChapter);
+          container.innerHTML = `
+            <div class="bg-white border border-gray-300 rounded-lg shadow p-6 w-80">
+              <h1 class="text-2xl font-bold text-gray-700 mb-4">Hi ${name}, here's your lesson</h1>
+              <h2 class="text-lg font-semibold mb-2">${selectedChapter}</h2>
+              <div class="text-gray-700 whitespace-pre-wrap leading-relaxed">${lesson}</div>
+            </div>
+          `;
+        }, 5000);
+      };
+
+      nameButton?.addEventListener('click', finish);
+      nameInput?.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') finish();
+      });
     }
   });
+
+  function stripMarkdown(text) {
+    if (!text) return "";
+
+    return text
+      .replace(/^#{1,6}\s+/gm, "")
+      .replace(/^\s*[-*+]\s+/gm, "")
+      .replace(/```[\s\S]*?```/g, "")
+      .replace(/`{1,3}([^`]*)`{1,3}/g, "$1")
+      .trim();
+  }
+
+  async function fetchSarvamAnswer(name, chapter) {
+    const prompt = `You are an expert teacher. Explain the chapter "${chapter}" to a student named ${name} in a simple, friendly way. Provide a clear answer in plain text with no markdown formatting (no headings, lists, or code blocks).`;
+
+    const response = await fetch(Sarvam_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${Sarvam_API_Key}`,
+      },
+      body: JSON.stringify({
+        model: "sarvam-105b",
+        messages: [
+          { role: "system", content: "You are a helpful tutor." },
+          { role: "user", content: prompt }
+        ],
+      }),
+    });
+
+    const data = await response.json();
+
+    const raw =
+      data?.choices?.[0]?.message?.content ||
+      data?.choices?.[0]?.text ||
+      data?.output?.[0]?.content?.[0]?.text ||
+      data?.text ||
+      data?.message ||
+      "(no response)";
+
+    return stripMarkdown(raw);
+  }
+
 
   console.log("Class:", cls);
   console.log("Subject:", subject);
   console.log("Chapters:", chapters);
-});
-
-chapterSelect.addEventListener("change", () => {
-  if (chapterSelect.value !== "Select a chapter") {
-    const container = document.querySelector(".flex.justify-center.items-center.h-screen");
-    container.computedStyleMap.display = "none";
-  }
-
 });
