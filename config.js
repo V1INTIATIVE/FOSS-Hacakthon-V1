@@ -254,6 +254,7 @@ function typeWriterParagraphs(element, text, speed = 15) {
 }
 
 const Sarvam_ENDPOINT = "https://api.sarvam.ai/v1/chat/completions";
+const Sarvam_API_Key = "ENTER_YOUR_API_KEY_HERE";
 
 const modeSelect = document.getElementById("mode");
 
