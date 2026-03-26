@@ -212,19 +212,58 @@ const data = {
   }
 };
 
-const Sarvam_ENDPOINT = "https://api.sarvam.ai/v1/chat/completions";
-const Sarvam_API_Key = "ENTER_API_KEY"; // Replace with your actual Sarvam AI API key
+function formatParagraphs(text) {
+  return text
+    .split(/\n\s*\n/) // split by empty lines
+    .map(p => p.trim())
+    .filter(p => p.length > 0);
+}
 
+function typeWriterParagraphs(element, text, speed = 15) {
+  const paragraphs = formatParagraphs(text);
+  element.innerHTML = "";
+
+  let pIndex = 0;
+
+  function typeNextParagraph() {
+    if (pIndex >= paragraphs.length) return;
+
+    const p = document.createElement("p");
+    p.className = "mb-3";
+    element.appendChild(p);
+
+    let i = 0;
+    const content = paragraphs[pIndex];
+
+    function typeChar() {
+      if (i < content.length) {
+        p.textContent += content.charAt(i);
+        i++;
+        setTimeout(typeChar, speed);
+      } else {
+        pIndex++;
+        setTimeout(typeNextParagraph, 200);
+      }
+    }
+
+    typeChar();
+  }
+
+  typeNextParagraph();
+
+}
+
+const Sarvam_ENDPOINT = "https://api.sarvam.ai/v1/chat/completions";
+
+const modeSelect = document.getElementById("mode");
 
 document.addEventListener("DOMContentLoaded", () => {
   const chapterSelect = document.getElementById("chapter");
   if (!chapterSelect) return;
 
-  // Load user choice from the previous page
   const cls = localStorage.getItem("class");
   const subject = localStorage.getItem("subject");
 
-  // Default placeholder option
   chapterSelect.innerHTML = "";
   const defaultOption = document.createElement("option");
   defaultOption.textContent = "Select a chapter";
@@ -232,7 +271,6 @@ document.addEventListener("DOMContentLoaded", () => {
   defaultOption.selected = true;
   chapterSelect.appendChild(defaultOption);
 
-  // If we don't have a valid selection, stop here.
   if (!cls || !subject || !data[cls] || !data[cls][subject]) {
     console.warn("Missing class/subject or no data available", { cls, subject });
     return;
@@ -250,7 +288,6 @@ document.addEventListener("DOMContentLoaded", () => {
     chapterSelect.appendChild(option);
   });
 
-  // Add event listener to show the name prompt and then replace the container after name is submitted
   chapterSelect.addEventListener('change', () => {
     if (chapterSelect.value && chapterSelect.value !== 'Select a chapter') {
       const container = document.querySelector('.flex.justify-center.items-center.h-screen');
@@ -285,17 +322,74 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
         `;
 
-        // After 5 seconds, load the Sarvam AI lesson
-        setTimeout(async () => {
-          const lesson = await fetchSarvamAnswer(name, selectedChapter);
-          container.innerHTML = `
-            <div class="bg-white border border-gray-300 rounded-lg shadow p-6 w-80">
-              <h1 class="text-2xl font-bold text-gray-700 mb-4">Hi ${name}, here's your lesson</h1>
-              <h2 class="text-lg font-semibold mb-2">${selectedChapter}</h2>
-              <div class="text-gray-700 whitespace-pre-wrap leading-relaxed">${lesson}</div>
-            </div>
-          `;
-        }, 5000);
+       (async () => {
+  const lesson = await fetchSarvamAnswer(name, selectedChapter);
+
+  container.innerHTML = `
+    <div class="bg-white border border-gray-300 rounded-lg shadow p-6 w-80">
+      <h1 class="text-2xl font-bold text-gray-700 mb-4">Hi ${name}, here's your lesson</h1>
+      <h2 class="text-lg font-semibold mb-2">${selectedChapter}</h2>
+      <div id="lessonText" class="text-gray-700 leading-relaxed">
+      <div id="lessonText" class="text-gray-700 leading-relaxed"></div>
+      </div>
+    </div>
+  `;
+  const lessonEl = document.getElementById("lessonText");
+  typeWriterParagraphs(lessonEl, lesson);
+
+  const followWrapper = document.createElement("div");
+  followWrapper.className = "mt-4";
+
+  followWrapper.innerHTML = `
+    <div class="flex gap-2">
+      <input 
+        id="followInput" 
+        type="text" 
+        placeholder="Ask a doubt..." 
+        class="flex-1 border border-gray-300 rounded px-3 py-2 text-sm"
+      />
+      <button 
+        id="followBtn"
+        class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+      >
+        Ask
+      </button>
+    </div>
+    <div id="followResponse" class="mt-4 text-gray-700"></div>
+  `;
+
+  container.querySelector(".bg-white").appendChild(followWrapper);
+
+  const followInput = document.getElementById("followInput");
+  const followBtn = document.getElementById("followBtn");
+  const followResponse = document.getElementById("followResponse");
+
+  async function handleFollowUp() {
+    const question = followInput.value.trim();
+    if (!question) return;
+
+    followInput.value = "";
+
+    const answerEl = document.createElement("div");
+    answerEl.className = "mt-2";
+
+    followResponse.appendChild(answerEl);
+
+    typeWriterParagraphs(answerEl, "Thinking...");
+
+    const answer = await fetchFollowUp(name, selectedChapter, question);
+
+    answerEl.innerHTML = "";
+    typeWriterParagraphs(answerEl, answer);
+  }
+
+  followBtn.addEventListener("click", handleFollowUp);
+
+  followInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") handleFollowUp();
+  });
+
+     })();
       };
 
       nameButton?.addEventListener('click', finish);
@@ -317,7 +411,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function fetchSarvamAnswer(name, chapter) {
-    const prompt = `You are an expert teacher. Explain the chapter "${chapter}" to a student named ${name} in a simple, friendly way. Provide a clear answer in plain text with no markdown formatting (no headings, lists, or code blocks).`;
+    const prompt = `You are an expert teacher. Explain the chapter "${chapter}" to a student named ${name} in a simple, friendly way. Provide a clear answer in plain text with no markdown formatting (no headings, lists, or code blocks) Teach them in ${modeSelect}.`;
 
     const response = await fetch(Sarvam_ENDPOINT, {
       method: "POST",
@@ -328,7 +422,8 @@ document.addEventListener("DOMContentLoaded", () => {
       body: JSON.stringify({
         model: "sarvam-105b",
         messages: [
-          { role: "system", content: "You are a helpful tutor." },
+          { role: "system", content: `You are a helpful tutor. Main goal is the ensure concept clarity and application of the concepts taught by utilising the methods of ${modeSelect}. Always break down complex ideas into simple, easy-to-understand explanations. Use examples and analogies to make the content relatable. Focus on making the learning experience enjoyable and effective for ${name}.
+          for practice utilise Previous year questions, Sample Questions and real life scenarios.` },
           { role: "user", content: prompt }
         ],
       }),
@@ -347,6 +442,46 @@ document.addEventListener("DOMContentLoaded", () => {
     return stripMarkdown(raw);
   }
 
+  async function fetchFollowUp(name, chapter, question) {
+    const prompt = `
+Student name: ${name}
+Chapter: ${chapter}
+
+Student question: ${question}
+
+Explain clearly in simple terms, no markdown.
+`;
+
+    const response = await fetch(Sarvam_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${Sarvam_API_Key}`,
+      },
+      body: JSON.stringify({
+        model: "sarvam-105b",
+        messages: [
+          {
+            role: "system",
+            content: `You are a helpful tutor continuing a lesson.`,
+          },
+          { role: "user", content: prompt },
+        ],
+      }),
+    });
+
+    const data = await response.json();
+
+    const raw =
+      data?.choices?.[0]?.message?.content ||
+      data?.choices?.[0]?.text ||
+      data?.output?.[0]?.content?.[0]?.text ||
+      data?.text ||
+      data?.message ||
+      "(no response)";
+
+    return stripMarkdown(raw);
+  }
 
   console.log("Class:", cls);
   console.log("Subject:", subject);
