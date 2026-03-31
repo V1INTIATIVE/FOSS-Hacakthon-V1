@@ -1,4 +1,7 @@
+
+const Sarvam_API_Key = "Enter Your Sarvam API Key Here";
 const Sarvam_ENDPOINT = "https://api.sarvam.ai/v1/chat/completions";
+
 let data = null;
 let currentNode = null;
 
