@@ -1,29 +1,64 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Get Started</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up</title>
+<link rel="stylesheet" href="style.css">
 
-  <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wdth,wght@92.6,400..700&family=Poetsen+One&display=swap" rel="stylesheet">
+  <style>
+body {
+  background: #01042d;
+  color: white;
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+#box {
+  background: rgba(255,255,255,0.05);
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  width: 90%;
+  max-width: 400px;
+}
+
+input {
+  width: 90%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: none;
+}
+
+button {
+  margin-top: 10px;
+  padding: 12px 20px;
+  border-radius: 20px;
+  border: none;
+  background: linear-gradient(270deg, #667eea, #764ba2);
+  color: white;
+  cursor: pointer;
+} 
+
+
+    
+  </style>
 </head>
-
 <body>
 
-<div class="media-row">
-  <img class="media-img" src="timmy.png" alt="Timmy">
-  <div class="media-text">
-    
-    <p font-family="Poetsen One">Type your name and press Continue.</p>
-  </div>
-</div>
-<input type="text" id="username" placeholder="Enter your name">
+<div id="box">
+  <h1>Start Your Journey</h1>
 
-<button onclick="continueSetup()">Continue</button>
+  <input id="name" placeholder="Your Name">
+  <input id="goal" placeholder="Your Main Goal">
+  <input id="x" placeholder="Sarvam API Key">
+
+  <button onclick="signup()">Continue</button>
+</div>
 
 <script src="script.js"></script>
-
 </body>
 </html>

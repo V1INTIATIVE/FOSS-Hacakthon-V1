@@ -1,64 +1,48 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sign Up</title>
-<link rel="stylesheet" href="style.css">
+  
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TULIP AI - Home Page</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wdth,wght@92.6,400..700&family=Poetsen+One&display=swap" rel="stylesheet">
+  </head>
+  <body>
+<div id="nav">
+  <div class="left">
 
-  <style>
-body {
-  background: #01042d;
-  color: white;
-  font-family: sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
+    <button onclick="window.location.href='About'">About</button>
+    <button onclick="window.location.href='FOSS2026'">FOSS 2026</button>
+    <button onclick="window.location.href='Github'">GitHub</button>
+  </div>
 
-#box {
-  background: rgba(255,255,255,0.05);
-  padding: 30px;
-  border-radius: 20px;
-  text-align: center;
-  width: 90%;
-  max-width: 400px;
-}
-
-input {
-  width: 90%;
-  padding: 12px;
-  margin: 10px 0;
-  border-radius: 10px;
-  border: none;
-}
-
-button {
-  margin-top: 10px;
-  padding: 12px 20px;
-  border-radius: 20px;
-  border: none;
-  background: linear-gradient(270deg, #667eea, #764ba2);
-  color: white;
-  cursor: pointer;
-} 
-
-
-    
-  </style>
-</head>
-<body>
-
-<div id="box">
-  <h1>Start Your Journey</h1>
-
-  <input id="name" placeholder="Your Name">
-  <input id="goal" placeholder="Your Main Goal">
-  <input id="x" placeholder="Sarvam API Key">
-
-  <button onclick="signup()">Continue</button>
+  <div class="right">
+    <button onclick="window.location.href='Signup'">Sign Up</button>
+    <button onclick="window.location.href='Login'">Login</button>
+  </div>
 </div>
 
-<script src="script.js"></script>
-</body>
+    <h1 id="maintitle"><span>T</span><span>U</span><span>L</span><span>I<img id="LEAF" src="leaf.png"></span><span>P</span> 
+   <span>AI</span></h1>
+   <h3 id="Quote">A Tulip tries to Bloom even if it might Die Trying.</h3>
+
+  <div class="startSection">
+    <button id="Getstarted" onclick="window.location.href='GetStarted'">Get Started</button>
+
+  
+<br>
+<br>
+<br>
+<br>
+<div id="scrollHint">
+  ↓  ↓  ↓ 
+</div>
+<H2 id="Intro"><span>INTRODUCTION TO TULIP AI</span></H2>
+<p align="center">Tulip AI is an open-source, web based AI planner that allows for Skill developement rather than Rot-Learning, for future Goals, It makes a set Structure and Plan for your Personal Goals in life, And Adds Side quests along with it!</p><br>
+<script src="https://cdn.jsdelivr.net/npm/animejs/lib/anime.min.js"></script>
+<script src="ggnet.js"></script>
+
+  </body>
 </html>
