@@ -17,4 +17,5 @@ function signup() {
   window.location.href = "planner.html";
 }
 
-let goal = savedData;
+
+export let goal;
