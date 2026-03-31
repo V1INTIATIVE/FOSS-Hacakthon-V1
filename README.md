@@ -1,7 +1,7 @@
 Open Source project for FOSS Hacakthon 2026
 
 
-Tulip-AI aims to provide efficent and interactive learning for engaging concepts in a way that allows you to understand and apply them by knowing what they actually do ,what they are for and real life applications.
+Tulip-AI aims to provide efficent and interactive learning web planner for achieveing your goals by providing an efficent roadmap.
 
 API Keys required for using this:
 
