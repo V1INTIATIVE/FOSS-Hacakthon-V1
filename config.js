@@ -294,7 +294,11 @@ console.log("Name_check in config:", Name_check);
 
 
 const Sarvam_ENDPOINT = "https://api.sarvam.ai/v1/chat/completions";
+<<<<<<< HEAD
 const Sarvam_API_Key = "sk_6e9m67ov_oVfN0l0OknDnFWhAPVkSakcd";
+=======
+const Sarvam_API_Key = "ENTER_YOUR_API_KEY_HERE";
+>>>>>>> 66316e8635b53bc2cba2f72b2112188e1ef2cf3c
 
 const modeSelect = document.getElementById("mode");
 
@@ -528,4 +532,4 @@ Explain clearly in simple terms, no markdown.
   console.log("Class:", cls);
   console.log("Subject:", subject);
   console.log("Chapters:", chapters);
-});
+});});
