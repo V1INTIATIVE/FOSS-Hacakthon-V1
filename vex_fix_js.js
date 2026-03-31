@@ -1,3 +1,7 @@
+import {vex} from './script.js';
+
+const vex = goal;
+
 
 const Sarvam_API_Key = "Enter Your Sarvam API Key Here";
 const Sarvam_ENDPOINT = "https://api.sarvam.ai/v1/chat/completions";
