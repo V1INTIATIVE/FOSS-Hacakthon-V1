@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Input</title>
+
+    <style>
+
+        button{
+            display: block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            border: none;
+            font-weight: bold;
+            border-radius: 5px;
+        
+            
+        }
+
+        background {
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input {
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+
+
+
+
+
+
+    </style>
+</head>
+
+<body>
+
+<h1>Tulip AI</h1>
+
+
+<button onclick="window.open('https://fossunited.org/fosshack/2026', '_blank')">FOSS Hackathon</button>
+<button onclick="window.open('https://www.github.com', '_blank')">Github</button>
+
+
+<input type="text" id="input" placeholder="Enter your goal here">
+<button onclick="handleClick()">Submit</button>
+
+<script>
+function handleClick() {
+    const inputValue = document.getElementById("input").value.trim();
+
+    if (!inputValue) {
+        alert("Enter something first");
+        return;
+    }
+
+    localStorage.setItem("savedData", inputValue);
+
+    window.location.href = "gg.html";
+}
+</script>
+
+</body>
+</html>

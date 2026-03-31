@@ -35,3 +35,4 @@ function getButtonPos() {
   };
 }
 
+ export let Name_check = document.getElementById("username");

@@ -1,53 +1,20 @@
-anime({
-  targets: "#maintitle span",
-  translateY: [100, 0],
-  opacity: [0, 1],
-  delay: anime.stagger(300),
-  duration: 1200,
-  easing: "easeOutExpo"
-});
+function signup() {
+  const name = document.getElementById("name").value;
+  let vex = document.getElementById("goal").value;
+  const key = document.getElementById("apikey").value;
 
-anime({
-  targets: "#Quote",
-  opacity: [0, 1],
-  delay: 2000,
-  duration: 1200,
-  easing: "easeOutExpo"
-});
-anime({
-  targets: "#Getstarted",
-  opacity: [0, 0.8],
-  delay: 2500,
-  duration: 1200,
-  easing: "easeOutExpo"
-})
+  if (!name || !goal || !key) return;
 
-
-
-const hint = document.getElementById("scrollHint");
-
-window.addEventListener("scroll", () => {
-  if (window.scrollY > 50) {
-    hint.style.opacity = "0";
-  } else {
-    hint.style.opacity = "1";
-  }
-});
-
-function getButtonPos() {
-  const rect = getStarted.getBoundingClientRect();
-  return {
-    top: rect.top + window.scrollY,
-    left: rect.left + window.scrollX,
-    width: rect.width,
-    height: rect.height
+  const user = {
+    name: name,
+    goal: goal,
+    apiKey: key,
+    points: 0
   };
+
+  localStorage.setItem("tulipUser", JSON.stringify(user));
+
+  window.location.href = "planner.html";
 }
 
-anime ({
-  targets: "#liltimmy",
-  opacity: [0, 1],
-  delay: 3000,
-  duration: 1200,
-  easing: "easeOutExpo"
-});
+export vex
